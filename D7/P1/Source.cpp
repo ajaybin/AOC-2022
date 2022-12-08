@@ -13,12 +13,11 @@ class dir {
 public:
 	string myname;
 	string myparentdir;
-	std::vector<string> mychilddirs;
 	unsigned int mysize;
-	dir(string name) {
+	dir(string name, string parentname = "NULL") {
 		myname = name;
 		mysize = 0;
-		myparentdir = "NULL";
+		myparentdir = parentname;
 	}
 	dir() {
 
@@ -48,7 +47,7 @@ int main() {
 				currentdir = "/";
 			}
 			else  if (s != "..") {
-				currentdir = currentdir+s;
+				currentdir = currentdir + s;
 			}
 			else {
 				currentdir = dirmap[currentdir].myparentdir;
@@ -59,33 +58,37 @@ int main() {
 		}
 		else if (std::regex_match(line, sm, std::regex("dir (.*)"))) {
 			string s = sm[1];
-			if (!dirmap.count(currentdir+s)) {
-				dir mydir(currentdir+s);
-				mydir.myparentdir = currentdir;
-				dirmap[currentdir].mychilddirs.push_back(currentdir+s);
-				dirmap[currentdir+s] = mydir;
+			if (!dirmap.count(currentdir + s)) {
+				dirmap[currentdir + s] = dir(currentdir + s, currentdir);
 			}
 		}
 		else if (std::regex_match(line, sm, std::regex("(\\d+).*"))) {
 			string s = sm[1];
 			string tempcurrentdir = currentdir;
-			dirmap[currentdir].mysize += stoi(s);
-			while (dirmap[tempcurrentdir].myparentdir != "NULL") {
-				tempcurrentdir = dirmap[tempcurrentdir].myparentdir;
+			do {
 				dirmap[tempcurrentdir].mysize += stoi(s);
-			}
+			} while ((tempcurrentdir = dirmap[tempcurrentdir].myparentdir) != "NULL");
 		}
 		else {
 			cout << "ERROR" << endl;
 		}
 	}
-	int total = 0;
+
+	//70000000
+	//30000000
+	int freespace = 70000000 - dirmap["/"].mysize;
+	int needspace = 30000000 - freespace;
+	int smallestsize = 70000000;
 	for (std::map<string, dir>::iterator it = dirmap.begin(); it != dirmap.end(); ++it) {
-		if (it->second.mysize <= 100000) {
-			total += it->second.mysize;
+		if (it->second.mysize >= needspace) {
+			//valid dir to delete
+			if (it->second.mysize < smallestsize) {
+				smallestsize = it->second.mysize;
+			}
 		}
 	}
-	cout << total;
+	cout << smallestsize;
+
 	infile.close();
 	return 0;
 }
