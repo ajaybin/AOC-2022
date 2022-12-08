@@ -13,12 +13,11 @@ class dir {
 public:
 	string myname;
 	string myparentdir;
-	std::vector<string> mychilddirs;
 	unsigned int mysize;
-	dir(string name) {
+	dir(string name, string parentname = "NULL") {
 		myname = name;
 		mysize = 0;
-		myparentdir = "NULL";
+		myparentdir = parentname;
 	}
 	dir() {
 
@@ -60,20 +59,15 @@ int main() {
 		else if (std::regex_match(line, sm, std::regex("dir (.*)"))) {
 			string s = sm[1];
 			if (!dirmap.count(currentdir + s)) {
-				dir mydir(currentdir + s);
-				mydir.myparentdir = currentdir;
-				dirmap[currentdir].mychilddirs.push_back(currentdir + s);
-				dirmap[currentdir + s] = mydir;
+				dirmap[currentdir + s] = dir(currentdir + s, currentdir);
 			}
 		}
 		else if (std::regex_match(line, sm, std::regex("(\\d+).*"))) {
 			string s = sm[1];
 			string tempcurrentdir = currentdir;
-			dirmap[currentdir].mysize += stoi(s);
-			while (dirmap[tempcurrentdir].myparentdir != "NULL") {
-				tempcurrentdir = dirmap[tempcurrentdir].myparentdir;
+			do {
 				dirmap[tempcurrentdir].mysize += stoi(s);
-			}
+			} while ((tempcurrentdir = dirmap[tempcurrentdir].myparentdir) != "NULL");
 		}
 		else {
 			cout << "ERROR" << endl;
