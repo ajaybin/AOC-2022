@@ -29,7 +29,6 @@ int main() {
 	string line;
 
 	std::map<std::string, dir> dirmap;
-	std::map<std::string, int> totaldirsize;
 
 	string currentdir = "/";
 
