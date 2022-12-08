@@ -74,21 +74,13 @@ int main() {
 		}
 	}
 
-	//70000000
-	//30000000
-	int freespace = 70000000 - dirmap["/"].mysize;
-	int needspace = 30000000 - freespace;
-	int smallestsize = 70000000;
+	int total = 0;
 	for (std::map<string, dir>::iterator it = dirmap.begin(); it != dirmap.end(); ++it) {
-		if (it->second.mysize >= needspace) {
-			//valid dir to delete
-			if (it->second.mysize < smallestsize) {
-				smallestsize = it->second.mysize;
-			}
+		if (it->second.mysize <= 100000) {
+			total += it->second.mysize;
 		}
 	}
-	cout << smallestsize;
-
+	cout << total;
 	infile.close();
 	return 0;
 }
