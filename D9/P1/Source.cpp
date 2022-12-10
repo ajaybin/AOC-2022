@@ -8,7 +8,8 @@
 #include <cstdlib>
 
 using namespace std;
-
+pair<int, int> key(0, 0);
+map<pair<int, int>, bool> mymap;
 class position {
 public:
 	int x, y;
@@ -75,16 +76,18 @@ void movetail(position& head, position& tail) {
 
 }
 
+void do_move(position& head, position& tail) {
+	movetail(head, tail);
+	key = std::make_pair(tail.x, tail.y);
+	mymap[key] = true;
+}
+
 int main() {
 	ifstream infile("Input.txt");
 	string line;
 
 	position head, tail;
-	pair<int, int> key (0, 0);
-	map<pair<int, int>, bool> mymap;
-
 	mymap[key] = true;
-	//SO UGLY. DAMN I need to clean this up(TM)
 	while (getline(infile, line)) {
 		smatch sm;
 		regex_match(line, sm, regex("([A-Z]) (\\d+)"));
@@ -92,33 +95,25 @@ int main() {
 		if (sm[1] == "U") {
 			for (int i = 0; i < movement; i++) {
 				head.y += 1;
-				movetail(head, tail);
-				key = std::make_pair(tail.x, tail.y);
-				mymap[key] = true;
+				do_move(head, tail);
 			}
 		}
 		else if (sm[1] == "D") {
 			for (int i = 0; i < movement; i++) {
 				head.y -= 1;
-				movetail(head, tail);
-				key = std::make_pair(tail.x, tail.y);
-				mymap[key] = true;
+				do_move(head, tail);
 			}
 		}
 		else if (sm[1] == "L") {
 			for (int i = 0; i < movement; i++) {
 				head.x -= 1;
-				movetail(head, tail);
-				key = std::make_pair(tail.x, tail.y);
-				mymap[key] = true;
+				do_move(head, tail);
 			}
 		}
 		else if (sm[1] == "R") {
 			for (int i = 0; i < movement; i++) {
 				head.x += 1;
-				movetail(head, tail);
-				key = std::make_pair(tail.x, tail.y);
-				mymap[key] = true;
+				do_move(head, tail);
 			}
 		}
 	}
