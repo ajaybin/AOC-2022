@@ -13,8 +13,7 @@ void shift() {
 		weigth += 40;
 	}
 	s.push_back(((cycle - 1) % 40 >= X - 1 && (cycle - 1) % 40 <= X + 1) ? '#' : '.');
-	cycle = next_cycle;
-	next_cycle++;
+	cycle = next_cycle++;
 }
 
 int main() {
