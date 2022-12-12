@@ -1,10 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <regex>
 #include <vector>
 #include <utility>
-#include <map>
 
 using namespace std;
 
