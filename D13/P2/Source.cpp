@@ -13,7 +13,7 @@ public:
 	int value;
 	bool empty = false;
 	element() {}
-	~element(){}
+	~element() {}
 };
 
 vector<string> convert_to_string_vec(string line) {
@@ -63,7 +63,7 @@ int compare_elements(element* ele1, element* ele2) {
 	// 0 : wrong order
 	// 1 : right order
 	int order = -1;
-	if (ele1->empty== true && ele2->empty == false) {
+	if (ele1->empty == true && ele2->empty == false) {
 		cout << "Left side ran out of items, so inputs are in the right order" << endl;
 		return 1;
 	}
@@ -131,32 +131,52 @@ int compare_lists(vector<element*> list1, vector<element*> list2) {
 	return order;
 }
 
+bool compare_wrap(vector<element*> list1, vector<element*> list2) {
+	int order = -1;
+
+	order = compare_lists(list1, list2);
+	if (order == 0) {
+		//wrong order
+		return false;
+	}
+	else if (order == 1) {
+		//right order
+		return true;
+	}
+}
+
 int main() {
 	ifstream infile("Input.txt");
 	string line1, line2;
 	vector<element*> list1;
 	vector<element*> list2;
-	int pair = 1;
-	int order = -1;
-	int total = 0;
+	vector<vector<element*>> vec;
+	int product = 1;
+
+	string div1 = "[[2]]";
+	string div2 = "[[6]]";
 
 	while (infile >> line1 >> line2) {
-		cout << "Compare " << line1 << " vs " << line2 << endl;
 		list1 = parse_line(line1);
 		list2 = parse_line(line2);
-		order = compare_lists(list1, list2);
-		if (order == 0) {
-
-		}
-		else if (order == 1) {
-			total += pair;
-		}
-		else {
-			cout << "ERROROROROROOROORROOORR" << endl;
-		}
-		pair++;
+		vec.push_back(list1);
+		vec.push_back(list2);
 	}
-	cout << "-------" << endl <<  total << endl;
+	list1 = parse_line(div1);
+	vec.push_back(list1);
+	list2 = parse_line(div2);
+	vec.push_back(list2);
+
+
+	std::sort(vec.begin(), vec.end(), compare_wrap);
+
+	for (size_t i = 0; i < vec.size(); i++) {
+		if (vec[i] == list1 || vec[i] == list2) {
+			product *= (i + 1);
+		}
+	}
+
+	cout << product;
 	infile.close();
 	return 0;
 }
