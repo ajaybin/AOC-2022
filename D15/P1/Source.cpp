@@ -43,17 +43,6 @@ int main() {
 		sensors.push_back(sense);
 		beacons[beaco] = true;
 		radius[sense] = distance(sense, beaco);
-		if (init_done == false) {
-			left = std::min(sense.first - radius[sense], beaco.first);
-			rite = std::max(sense.first + radius[sense], beaco.first);
-			init_done = true;
-		}
-		if (std::min(sense.first, beaco.first) < left) {
-			left = std::min(sense.first - radius[sense], beaco.first);
-		}
-		if (std::max(sense.first, beaco.first) > rite) {
-			rite = std::max(sense.first + radius[sense], beaco.first);
-		}
 	}
 
 	int check = 2000000;
